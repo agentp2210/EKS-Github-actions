@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  labels:
+    app: nginx
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/group.name: nginx          # service with same group.name will use the same ALB
+    external-dns.alpha.kubernetes.io/hostname: nginx.cmcloudlab732.info
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:661840802588:certificate/313eda6f-1c79-4349-8dab-3529bd3c8902    
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/listen-ports: "[{\"HTTP\":80,\"HTTPS\": 443}]"
+spec:
+  tls:
+  - hosts:
+    - nginx.cmcloudlab732.info
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: nginx-svc
+            port: 
+              number: 80

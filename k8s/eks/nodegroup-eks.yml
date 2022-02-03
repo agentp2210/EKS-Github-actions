@@ -1,0 +1,33 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: dev
+  region: us-east-1
+  version: "1.21"
+
+vpc:
+  cidr: 10.0.0.0/16
+
+# nodeGroups:
+#   - name: spot
+#     desiredCapacity: 3
+#     minSize: 2
+#     maxSize: 3
+#     privateNetworking: true
+#     instancesDistribution: # required to use Spot instance
+#       instanceTypes: ["t3.small", "t3.medium"]
+#       onDemandPercentageAboveBaseCapacity: 0 # required to use Spot instance
+#     labels: { lifecycle: Ec2Spot }
+
+managedNodeGroups:
+  - name: managed-nodes
+    instanceType: "t2.medium"
+    desiredCapacity: 3
+    privateNetworking: true
+
+# fargateProfiles:
+#   - name: fargate
+#     selectors:
+#       - namespace: default
+#       - namespace: kube-system
