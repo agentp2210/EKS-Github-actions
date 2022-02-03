@@ -10,6 +10,7 @@ env:
   AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: nginx-ecr           # set this to your Amazon ECR repository name
   ECR_URL: 661840802588.dkr.ecr.us-east-1.amazonaws.com
+  EKS_CLUSTER_NAME: dev
 
 jobs:
   Deploy:
@@ -47,9 +48,10 @@ jobs:
 
     - name: Install kubectl
       run: |
-        curl -o curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/darwin/amd64/kubectl
+        curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/darwin/amd64/kubectl
         chmod +x kubectl
         mv ./kubectl /usr/local/bin/kubectl
+        aws eks --region ${{ AWS_REGION }} update-kubeconfig --name ${{ EKS_CLUSTER_NAME }}
         
     - name: Fill in the new image ID in the Amazon EKS Deployment
       id: update-image
